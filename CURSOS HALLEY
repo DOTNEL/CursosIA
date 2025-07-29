@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HALLEY © GUIA DE CURSOS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0A0A0A;
+            --sidebar-bg: #1A1A1A;
+            --card-bg: #2A2A2A;
+            --text-color: #E0E0E0;
+            --heading-color: #FFFFFF;
+            --accent-color: #E96709;
+            --border-color: #3A3A3A;
+        }
+        body {
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+        }
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background-color: var(--sidebar-bg);
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .sidebar h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--heading-color);
+            text-align: center;
+            margin-top: 0;
+        }
+        #course-search {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 15px;
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #course-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #course-list li a, #about-us-link {
+            display: block;
+            padding: 12px;
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: 4px;
+            margin-bottom: 5px;
+            transition: background-color 0.2s ease;
+            font-weight: 600;
+        }
+        #course-list li a:hover, #course-list li a.active, #about-us-link:hover, #about-us-link.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 40px;
+            height: 100vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .card h1, .card h2, .card h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--heading-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .card h3 {
+            border-bottom: none;
+            font-size: 1.4em;
+        }
+        .card h4 {
+             font-family: 'Poppins', sans-serif;
+        }
+        .malla-curricular-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .malla-curricular-table th, .malla-curricular-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        .malla-curricular-table th {
+            background-color: var(--sidebar-bg);
+        }
+        .accordion-header {
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            color: var(--heading-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #1f1f1f;
+        }
+        .session-detail {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .team-container {
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .team-member {
+            text-align: center;
+            max-width: 200px;
+        }
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+        .carousel-item img {
+            width: 100%;
+            display: block;
+        }
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        .prev {
+            left: 10px;
+        }
+        .next {
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h3><i class="fas fa-robot"></i> Cursos de IA</h3>
+        <input type="text" id="course-search" placeholder="Buscar cursos...">
+        <ul id="course-list-container">
+            <li><a href="#" id="about-us-link"><i class="fas fa-info-circle"></i> Sobre Nosotros</a></li>
+        </ul>
+        <ul id="course-list"></ul>
+    </div>
+    <div class="content" id="course-content">
+        <div class="card"><h1>Selecciona un curso para ver los detalles</h1></div>
+    </div>
+
+    <script>
+        const allCoursesData = {
+            "curso_1": {"title":"GESTIÓN DE PROYECTOS DE INVESTIGACIÓN CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Básico-Intermedio (con conocimientos previos de Prompt Engineering)","delivery":"Virtual"},"value_proposition":{"problem":"La gestión de proyectos de investigación es un proceso complejo y demandante que consume mucho tiempo en tareas repetitivas, desde la planificación inicial hasta la difusión de resultados, retrasando la generación de conocimiento.","solution":"Este curso enseña a utilizar herramientas de IA para automatizar y optimizar cada fase del ciclo de vida de un proyecto de investigación, transformando la forma en que los ingenieros abordan la investigación y liberando tiempo para el análisis crítico.","final_product":{"title":"Sistema de Gestión de Investigación Asistido por IA","features":["Automatiza la planificación y generación de cronogramas.","Realiza revisiones bibliográficas y mapas conceptuales automáticos.","Genera borradores de artículos y presentaciones científicas.","Está listo para ser implementado en un proyecto de investigación real."]}},"methodology":{"name":"INVESTIGACIÓN AUMENTADA","phases":[{"name":"Fase 1: Planificación Inteligente (Semana 1)","objective":"Definir y estructurar el proyecto de investigación utilizando IA para la planificación y revisión bibliográfica."},{"name":"Fase 2: Ejecución y Difusión Acelerada (Semana 2)","objective":"Utilizar IA para el análisis de datos, la redacción académica y la creación de presentaciones de alto impacto."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Planificación de Investigación con IA","herramientas":["ChatGPT","Claude","Miro"],"entregable_practico":"Cronograma de investigación y definición de objetivos."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Revisión Bibliográfica Automatizada","herramientas":["Semantic Scholar","Connected Papers"],"entregable_practico":"Mapa conceptual de la literatura relevante."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Análisis de Datos con IA (Básico)","herramientas":["ChatGPT (Code Interpreter)","Google Sheets"],"entregable_practico":"Informe con gráficos y patrones preliminares."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Redacción Académica Asistida","herramientas":["ChatGPT","Grammarly","Zotero"],"entregable_practico":"Borrador de un abstract y conclusiones."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Presentaciones Científicas con IA","herramientas":["Beautiful.ai","Tome","ChatGPT"],"entregable_practico":"Presentación de slides generada automáticamente."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Gestión de Colaboraciones y Networking","herramientas":["LinkedIn","ChatGPT"],"entregable_practico":"Propuesta de colaboración y lista de contactos."}],"detailed_program":[{"week":1,"title":"PLANIFICACIÓN Y ANÁLISIS","sessions":[{"session_id":"1","title":"Planificación de Investigación con IA","objectives":["Definir objetivos de investigación claros con asistencia de IA.","Generar cronogramas de trabajo detallados y realistas.","Identificar variables y metodologías de investigación pertinentes."],"deliverables":["Documento de objetivos y alcance del proyecto.","Cronograma de investigación en formato Gantt."]},{"session_id":"2","title":"Revisión Bibliográfica Automatizada","objectives":["Utilizar IA para encontrar y sintetizar artículos científicos clave.","Crear mapas conceptuales automáticos para entender el estado del arte.","Organizar referencias y bibliografía de forma eficiente."],"deliverables":["Resumen de 10 artículos relevantes.","Mapa conceptual interactivo de la literatura."]},{"session_id":"3","title":"Análisis de Datos con IA (Básico)","objectives":["Realizar una interpretación exploratoria de datasets con IA.","Generar gráficos y visualizaciones automáticas para identificar tendencias.","Detectar patrones y correlaciones preliminares en los datos."],"deliverables":["Set de visualizaciones (gráficos de barras, dispersión, etc.).","Informe de una página con los hallazgos iniciales."]}]},{"week":2,"title":"REDACCIÓN Y DIFUSIÓN","sessions":[{"session_id":"4","title":"Redacción Académica Asistida","objectives":["Estructurar un paper científico de forma lógica con IA.","Mejorar la redacción de abstracts, introducciones y conclusiones.","Verificar la coherencia, gramática y estilo académico del texto."],"deliverables":["Esqueleto completo de un artículo de investigación.","Abstract y conclusiones refinados con IA."]},{"session_id":"5","title":"Presentaciones Científicas con IA","objectives":["Crear borradores de presentaciones de alto impacto desde contenido técnico.","Generar scripts y notas del orador para cada diapositiva.","Adaptar el contenido de la presentación para diferentes audiencias."],"deliverables":["Una presentación de 10 diapositivas lista para ser expuesta.","Script completo de la presentación."]},{"session_id":"6","title":"Gestión de Colaboraciones y Networking","objectives":["Identificar potenciales colaboradores o instituciones usando IA.","Automatizar el seguimiento de contactos académicos importantes.","Redactar propuestas de colaboración y emails de contacto efectivos."],"deliverables":["Lista curada de 20 potenciales colaboradores.","Plantillas de email para networking académico."]}]}],"evaluation":{"continuous":{"percentage":"60%","criteria":[{"name":"Entregables semanales","value":"50%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"40%","criteria":[{"name":"Calidad del Sistema de Gestión de Investigación","value":"30%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["ChatGPT / Claude","Semantic Scholar","Connected Papers"]},"participant_profile":{"requirements":["Conocimientos de Prompt Engineering.","Estar involucrado en proyectos de investigación o tener interés en ellos."],"recommended":["Ingenieros electrónicos, investigadores y estudiantes de posgrado."],"not_for":["Personas que buscan un curso de programación avanzada en IA."]}},
+            "curso_2": {"title":"ASISTENTES DIGITALES PARA INGENIERÍA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Básico-Intermedio (con conocimientos previos de Prompt Engineering)","delivery":"Virtual"},"value_proposition":{"problem":"Los ingenieros electrónicos dedican una cantidad significativa de tiempo a tareas repetitivas como cálculos, documentación y gestión de inventario, lo que reduce su productividad y enfoque en la innovación.","solution":"Este curso capacita a los ingenieros para crear y configurar asistentes de IA personalizados que automaticen tareas clave, actúen como tutores personalizados y optimicen los flujos de trabajo diarios.","final_product":{"title":"Asistente de Ingeniería Personalizado","features":["Realiza cálculos eléctricos y de componentes.","Genera reportes técnicos y documentación estandarizada.","Gestiona el inventario de componentes y genera alertas.","Actúa como un tutor personalizado para el aprendizaje continuo.","Está listo para ser integrado en el flujo de trabajo diario del ingeniero."]}},"methodology":{"name":"INGENIERÍA ASISTIDA POR IA","phases":[{"name":"Fase 1: Creación de Asistentes Especializados (Semana 1)","objective":"Desarrollar y configurar asistentes de IA para tareas específicas de ingeniería electrónica."},{"name":"Fase 2: Integración y Optimización (Semana 2)","objective":"Conectar los diferentes asistentes, optimizar su rendimiento y asegurar su integración en el entorno de trabajo."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Fundamentos de Asistentes IA Especializados","herramientas":["ChatGPT (GPTs)","Claude Projects"],"entregable_practico":"Documento de casos de uso para asistentes."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Configuración de Asistente para Cálculos","herramientas":["ChatGPT (GPTs)","Wolfram Alpha"],"entregable_practico":"Un GPT que resuelve cálculos eléctricos básicos."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Asistente para Documentación Técnica","herramientas":["ChatGPT (GPTs)","Claude"],"entregable_practico":"Un GPT que genera reportes técnicos estandarizados."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Asistente para Gestión de Inventario","herramientas":["ChatGPT (GPTs)","Zapier","Google Sheets"],"entregable_practico":"Un GPT que monitorea stock y genera alertas."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Asistente para Aprendizaje Continuo","herramientas":["ChatGPT (GPTs)","Perplexity"],"entregable_practico":"Un tutor de IA con un plan de estudio personalizado."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Integración y Optimización","herramientas":["ChatGPT (GPTs)","Zapier"],"entregable_practico":"Flujo de trabajo que conecta dos o más asistentes."}],"detailed_program":[{"week":1,"title":"CREACIÓN DE ASISTENTES ESPECIALIZADOS","sessions":[{"session_id":"1","title":"Fundamentos de Asistentes IA Especializados","objectives":["Comprender las diferencias entre asistentes generales y especializados.","Identificar casos de uso de alto valor en ingeniería electrónica.","Explorar las plataformas disponibles para crear asistentes."],"deliverables":["Análisis comparativo de plataformas de asistentes.","Lista de 3 casos de uso para un asistente personal."]},{"session_id":"2","title":"Configuración de Asistente para Cálculos","objectives":["Crear un asistente para resolver cálculos eléctricos comunes.","Definir prompts especializados para problemas de ingeniería.","Integrar normativas y fórmulas estándar en el asistente."],"deliverables":["Un GPT funcional para cálculos de la Ley de Ohm.","Documento de prompts para 5 cálculos diferentes."]},{"session_id":"3","title":"Asistente para Documentación Técnica","objectives":["Configurar un asistente para generar reportes técnicos.","Crear plantillas automáticas para documentación de proyectos.","Asegurar el mantenimiento de estándares de formato."],"deliverables":["Un GPT que genera un reporte de laboratorio a partir de datos.","Plantilla de documentación en formato Markdown."]}]},{"week":2,"title":"GESTIÓN, APRENDIZAJE E INTEGRACIÓN","sessions":[{"session_id":"4","title":"Asistente para Gestión de Inventario","objectives":["Automatizar el seguimiento de componentes electrónicos.","Configurar alertas de bajo stock y sugerencias de reposición.","Realizar análisis de costos básicos de componentes."],"deliverables":["Sistema de seguimiento de inventario en Google Sheets.","Un GPT que interactúa con la hoja de inventario."]},{"session_id":"5","title":"Asistente para Aprendizaje Continuo","objectives":["Configurar un tutor de IA personalizado en un área de interés.","Establecer un sistema de seguimiento de progreso en nuevas tecnologías.","Generar planes de estudio personalizados y curados."],"deliverables":["Un tutor de IA sobre un tema de nanochips.","Plan de estudio de 1 mes generado por IA."]},{"session_id":"6","title":"Integración y Optimización","objectives":["Conectar diferentes asistentes para crear un flujo de trabajo cohesivo.","Implementar un ciclo de mejora continua basado en el uso.","Aprender a solucionar los problemas más comunes de los asistentes."],"deliverables":["Un flujo de trabajo que conecta el asistente de cálculos y el de documentación.","Checklist de troubleshooting para GPTs."]}]}],"evaluation":{"continuous":{"percentage":"60%","criteria":[{"name":"Entregables semanales","value":"50%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"40%","criteria":[{"name":"Calidad del Asistente de Ingeniería Personalizado","value":"30%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["ChatGPT (versión Plus para creación de GPTs)","Claude"]},"participant_profile":{"requirements":["Conocimientos de Prompt Engineering.","Experiencia o interés en la automatización de tareas de ingeniería."],"recommended":["Ingenieros electrónicos, de telecomunicaciones y áreas afines."],"not_for":["Personas sin acceso a ChatGPT Plus.","Quienes buscan un curso de desarrollo de software."]}},
+            "curso_3": {"title":"NO-CODE CON IA PARA INGENIEROS","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Básico-Intermedio (con conocimientos previos de Prompt Engineering)","delivery":"Virtual"},"value_proposition":{"problem":"Los ingenieros a menudo enfrentan la necesidad de automatizar procesos y crear herramientas internas, pero carecen del tiempo o las habilidades de programación para desarrollar soluciones desde cero.","solution":"Este curso introduce a los ingenieros en el mundo del No-Code con IA, permitiéndoles construir aplicaciones y automatizaciones potentes sin escribir una sola línea de código, conectando herramientas de IA con sus flujos de trabajo existentes.","final_product":{"title":"Suite de Automatización No-Code para Ingeniería","features":["Un sistema de clasificación y respuesta automática de comunicaciones técnicas.","Un flujo de trabajo para la extracción de datos de hojas de especificaciones (datasheets).","Un dashboard de análisis de datos automático.","Está lista para ser implementada y escalada en un entorno profesional."]}},"methodology":{"name":"INGENIERÍA ÁGIL SIN CÓDIGO","phases":[{"name":"Fase 1: Automatización de Procesos (Semana 1)","objective":"Aprender los fundamentos del No-Code y automatizar tareas de comunicación y procesamiento de documentos."},{"name":"Fase 2: Integración y Análisis (Semana 2)","objective":"Conectar herramientas de IA con software de ingeniería y crear sistemas de análisis de datos automáticos."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Introducción al No-Code con IA","herramientas":["Zapier","Make","ChatGPT"],"entregable_practico":"Mapa de casos de uso para automatización."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Automatización de Comunicaciones","herramientas":["Zapier","Gmail","Claude"],"entregable_practico":"Flujo que clasifica y responde emails técnicos."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Procesamiento de Documentos","herramientas":["Parseur","DocuParser","ChatGPT"],"entregable_practico":"Sistema que extrae datos de 5 datasheets."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Integración con Herramientas de Ingeniería","herramientas":["Webhooks","APIs","Make"],"entregable_practico":"Alerta automática de un software CAD a Slack."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Análisis Automático de Datos","herramientas":["Google Sheets","Looker Studio","ChatGPT"],"entregable_practico":"Dashboard que se actualiza automáticamente."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Implementación y Mantenimiento","herramientas":["Zapier","Make"],"entregable_practico":"Plan de monitoreo y escalabilidad de la solución."}],"detailed_program":[{"week":1,"title":"AUTOMATIZACIÓN DE PROCESOS","sessions":[{"session_id":"1","title":"Introducción al No-Code con IA","objectives":["Entender los conceptos básicos de la automatización No-Code.","Diferenciar entre No-Code, Low-Code y programación tradicional.","Identificar los principales casos de uso en ingeniería."],"deliverables":["Glosario de términos de No-Code.","Documento con 3 procesos a automatizar."]},{"session_id":"2","title":"Automatización de Comunicaciones","objectives":["Configurar respuestas automáticas a emails frecuentes.","Clasificar automáticamente emails técnicos por prioridad.","Generar reportes de estatus automáticos para el equipo."],"deliverables":["Un 'Zap' que responde a emails con un template.","Filtro de Gmail que etiqueta emails por contenido."]},{"session_id":"3","title":"Procesamiento de Documentos","objectives":["Extraer datos estructurados de hojas de especificaciones (datasheets).","Convertir automáticamente entre diferentes formatos de documentos.","Generar resúmenes técnicos de documentos largos."],"deliverables":["Flujo que extrae los parámetros de un componente de un PDF.","Resumen automático de un paper técnico."]}]},{"week":2,"title":"INTEGRACIÓN Y ANÁLISIS","sessions":[{"session_id":"4","title":"Integración con Herramientas de Ingeniería","objectives":["Conectar la IA con software CAD a través de webhooks (básico).","Automatizar la creación de reportes a partir de datos de simulación.","Crear alertas automáticas para eventos clave en proyectos."],"deliverables":["Una notificación en Slack cuando se guarda un archivo CAD.","Reporte en PDF generado desde una hoja de cálculo."]},{"session_id":"5","title":"Análisis Automático de Datos","objectives":["Configurar dashboards que se actualizan en tiempo real.","Detectar anomalías básicas en series de datos de sensores.","Generar y enviar informes periódicos de forma automática."],"deliverables":["Dashboard en Looker Studio conectado a Google Sheets.","Alerta por email cuando un valor excede un umbral."]},{"session_id":"6","title":"Implementación y Mantenimiento","objectives":["Aprender a desplegar soluciones No-Code de forma segura.","Monitorear el uso y el rendimiento de las automatizaciones.","Entender cómo escalar las soluciones a medida que crece la necesidad."],"deliverables":["Checklist de despliegue para soluciones No-Code.","Plan de mantenimiento para las automatizaciones creadas."]}]}],"evaluation":{"continuous":{"percentage":"60%","criteria":[{"name":"Entregables semanales","value":"50%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"40%","criteria":[{"name":"Calidad de la Suite de Automatización No-Code","value":"30%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["Zapier / Make (Integromat)","ChatGPT / Claude"]},"participant_profile":{"requirements":["Conocimientos de Prompt Engineering.","Comprensión de los flujos de trabajo de ingeniería que se desean automatizar."],"recommended":["Ingenieros de todas las disciplinas que buscan optimizar sus procesos."],"not_for":["Desarrolladores de software experimentados que prefieren codificar."]}},
+            "curso_4": {"title":"FLUJOS DE TRABAJO CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Intermedio (con conocimientos previos de Prompt Engineering y automatización básica)","delivery":"Virtual"},"value_proposition":{"problem":"Los procesos de ingeniería a menudo son lineales y contienen cuellos de botella que dependen de la intervención manual, lo que limita la eficiencia y la capacidad de escalar las operaciones.","solution":"Este curso enseña a los ingenieros a rediseñar sus procesos de trabajo, integrando la IA para crear flujos inteligentes, automatizar la toma de decisiones y optimizar la asignación de recursos, resultando en un aumento significativo de la productividad.","final_product":{"title":"Flujo de Trabajo Inteligente para un Proceso de Ingeniería","features":["Un mapa del proceso actual y su optimización con IA.","Puntos de decisión y validación automatizados.","Un sistema de gestión de aprobaciones y notificaciones inteligentes.","Un plan para el monitoreo y la mejora continua del flujo de trabajo.","Está listo para ser propuesto e implementado en su organización."]}},"methodology":{"name":"INGENIERÍA DE PROCESOS INTELIGENTE","phases":[{"name":"Fase 1: Diseño y Automatización de Flujos (Semana 1)","objective":"Mapear los procesos existentes, identificar oportunidades de mejora con IA y diseñar flujos de trabajo inteligentes."},{"name":"Fase 2: Optimización y Monitoreo (Semana 2)","objective":"Optimizar la asignación de recursos, monitorear el rendimiento del flujo de trabajo y establecer un ciclo de mejora continua."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Mapeo de Procesos Actuales","herramientas":["Lucidchart","Miro","ChatGPT"],"entregable_practico":"Diagrama de flujo del proceso actual (As-Is)."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Diseño de Flujos Inteligentes","herramientas":["Lucidchart","ChatGPT"],"entregable_practico":"Diagrama de flujo del proceso futuro (To-Be)."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Automatización de Revisiones","herramientas":["Zapier","ChatGPT"],"entregable_practico":"Flujo de revisión de diseño automatizado."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Gestión de Aprobaciones","herramientas":["Trello","Asana","Make"],"entregable_practico":"Sistema de aprobación con notificaciones."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Optimización de Recursos","herramientas":["Airtable","Claude"],"entregable_practico":"Simulación de asignación de tareas optimizada."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Monitoreo y Mejora Continua","herramientas":["Looker Studio","Grafana"],"entregable_practico":"Dashboard de KPIs para el flujo de trabajo."}],"detailed_program":[{"week":1,"title":"DISEÑO Y AUTOMATIZACIÓN DE FLUJOS","sessions":[{"session_id":"1","title":"Mapeo de Procesos Actuales","objectives":["Identificar puntos de mejora y cuellos de botella con IA.","Analizar el uso de tiempo y recursos en los procesos actuales.","Priorizar las oportunidades de automatización por impacto."],"deliverables":["Mapa de calor de ineficiencias en el proceso.","Matriz de priorización de automatizaciones."]},{"session_id":"2","title":"Diseño de Flujos Inteligentes","objectives":["Crear workflows detallados paso a paso.","Incorporar puntos de decisión automática basados en IA.","Integrar validaciones de IA para asegurar la calidad."],"deliverables":["Diagrama de flujo del nuevo proceso inteligente.","Documento de reglas para la toma de decisiones de IA."]},{"session_id":"3","title":"Automatización de Revisiones","objectives":["Crear flujos para la revisión automática de diseños.","Validar automáticamente el cumplimiento de especificaciones.","Implementar un control de calidad asistido por IA."],"deliverables":["Checklist de revisión de diseño automatizado.","Reporte de validación de especificaciones."]}]},{"week":2,"title":"OPTIMIZACIÓN Y MONITOREO","sessions":[{"session_id":"4","title":"Gestión de Aprobaciones","objectives":["Automatizar cadenas de aprobación de múltiples niveles.","Dar seguimiento en tiempo real al estatus de los proyectos.","Configurar alertas y notificaciones inteligentes."],"deliverables":["Tablero Kanban con el flujo de aprobación.","Sistema de notificaciones por email o Slack."]},{"session_id":"5","title":"Optimización de Recursos","objectives":["Asignar tareas automáticamente basadas en la carga de trabajo.","Balancear las cargas de trabajo del equipo de forma dinámica.","Predecir los tiempos de entrega de los proyectos."],"deliverables":["Simulación de asignación de recursos para un proyecto.","Estimación de tiempos de entrega basada en IA."]},{"session_id":"6","title":"Monitoreo y Mejora Continua","objectives":["Definir y calcular KPIs automatizados para los flujos.","Identificar cuellos de botella y áreas de mejora.","Realizar optimizaciones iterativas con asistencia de IA."],"deliverables":["Dashboard con los KPIs del flujo de trabajo.","Plan de mejora continua para el siguiente ciclo."]}]}],"evaluation":{"continuous":{"percentage":"60%","criteria":[{"name":"Entregables semanales","value":"50%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"40%","criteria":[{"name":"Calidad del Flujo de Trabajo Inteligente diseñado","value":"30%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["Herramientas de BPM (Business Process Management) con IA","Zapier / Make","ChatGPT / Claude"]},"participant_profile":{"requirements":["Experiencia en la gestión de procesos de ingeniería.","Conocimientos de Prompt Engineering y automatización."],"recommended":["Jefes de proyecto, líderes de equipo y gerentes de ingeniería."],"not_for":["Personas sin experiencia en la gestión de procesos."]}},
+            "curso_5": {"title":"MARCA DIGITAL PERSONAL PARA INGENIEROS CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Básico-Intermedio (con conocimientos previos de Prompt Engineering)","delivery":"Virtual"},"value_proposition":{"problem":"Muchos ingenieros altamente cualificados tienen una presencia digital débil o inexistente, lo que limita sus oportunidades de carrera, colaboración y liderazgo en la industria.","solution":"Este curso proporciona a los ingenieros las herramientas y estrategias para construir una marca personal técnica sólida y auténtica utilizando la IA para la creación de contenido, la optimización de perfiles y el networking inteligente.","final_product":{"title":"Ecosistema de Marca Personal Digital","features":["Un perfil de LinkedIn optimizado con IA.","Un portafolio digital automatizado.","Un calendario de contenido técnico generado por IA.","Un sistema de networking inteligente para identificar y contactar a líderes de la industria.","Está listo para ser lanzado y gestionado de forma continua."]}},"methodology":{"name":"INGENIERÍA DE LA INFLUENCIA TÉCNICA","phases":[{"name":"Fase 1: Creación de Contenido y Optimización de Perfiles (Semana 1)","objective":"Desarrollar una estrategia de marca personal y utilizar la IA para crear contenido técnico y optimizar los perfiles profesionales."},{"name":"Fase 2: Networking y Crecimiento (Semana 2)","objective":"Implementar estrategias de networking inteligente y utilizar la analítica para medir el impacto y optimizar el crecimiento de la marca personal."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Estrategia de Marca Personal Técnica","herramientas":["ChatGPT","Claude"],"entregable_practico":"Documento de propuesta de valor única."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Creación de Contenido Técnico","herramientas":["ChatGPT","Medium","LinkedIn"],"entregable_practico":"Un artículo técnico de 500 palabras."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Optimización de Perfiles Profesionales","herramientas":["LinkedIn","ChatGPT"],"entregable_practico":"Perfil de LinkedIn optimizado al 100%."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Networking Digital Inteligente","herramientas":["LinkedIn Sales Navigator","ChatGPT"],"entregable_practico":"Plantillas de mensajes de networking."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Creación de Contenido Visual","herramientas":["Canva","DALL-E 3","Midjourney"],"entregable_practico":"Set de 3 infografías técnicas."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Medición y Optimización","herramientas":["LinkedIn Analytics","Google Analytics"],"entregable_practico":"Reporte de análisis de impacto de contenido."}],"detailed_program":[{"week":1,"title":"ESTRATEGIA Y CREACIÓN DE CONTENIDO","sessions":[{"session_id":"1","title":"Estrategia de Marca Personal Técnica","objectives":["Definir una especialización y un nicho de mercado.","Identificar la audiencia objetivo y sus necesidades.","Crear una propuesta de valor única y un mensaje claro."],"deliverables":["Documento de estrategia de marca personal.","Elevator pitch de 30 segundos."]},{"session_id":"2","title":"Creación de Contenido Técnico","objectives":["Generar ideas para artículos técnicos con IA.","Simplificar conceptos complejos para una audiencia más amplia.","Crear un calendario de contenido automatizado."],"deliverables":["Un artículo técnico generado con IA y editado.","Calendario de contenido para 1 mes."]},{"session_id":"3","title":"Optimización de Perfiles Profesionales","objectives":["Optimizar el perfil de LinkedIn para SEO y atracción de reclutadores.","Crear portafolios digitales automáticos.","Generar CVs técnicos adaptativos para diferentes ofertas."],"deliverables":["Perfil de LinkedIn con una puntuación de 'All-Star'.","Un portafolio digital básico en una plataforma No-Code."]}]},{"week":2,"title":"NETWORKING Y CRECIMIENTO","sessions":[{"session_id":"4","title":"Networking Digital Inteligente","objectives":["Identificar contactos relevantes y líderes de opinión.","Redactar mensajes de networking personalizados y efectivos.","Automatizar el seguimiento de relaciones profesionales."],"deliverables":["Lista de 50 contactos clave a seguir.","5 plantillas de mensajes de contacto personalizables."]},{"session_id":"5","title":"Creación de Contenido Visual","objectives":["Crear infografías técnicas atractivas con IA.","Generar presentaciones profesionales automáticas.","Producir videos explicativos cortos asistidos por IA."],"deliverables":["Una infografía sobre un tema técnico.","Una presentación de 5 diapositivas sobre un proyecto."]},{"session_id":"6","title":"Medición y Optimización","objectives":["Analizar el impacto y el alcance del contenido publicado.","Optimizar las publicaciones para mejorar el engagement.","Desarrollar estrategias de crecimiento sostenible a largo plazo."],"deliverables":["Reporte de métricas de LinkedIn y Twitter.","Plan de optimización de contenido para el próximo mes."]}]}],"evaluation":{"continuous":{"percentage":"60%","criteria":[{"name":"Entregables semanales","value":"50%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"40%","criteria":[{"name":"Calidad del Ecosistema de Marca Personal Digital","value":"30%"},{"name":"Presentación final de la estrategia de marca","value":"10%"}]}},"resources":{"platforms":["ChatGPT / Claude","Herramientas de generación de imágenes con IA (e.g., Midjourney, DALL-E 3)"]},"participant_profile":{"requirements":["Deseo de construir una marca personal profesional.","Conocimientos de Prompt Engineering."],"recommended":["Ingenieros de todas las áreas que quieran aumentar su visibilidad y liderazgo."],"not_for":["Personas que no están interesadas en tener una presencia digital profesional."]}},
+            "curso_6": {"title":"CURADURÍA DE DOCUMENTACIÓN TÉCNICA CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Intermedio (con conocimientos de gestión documental)","delivery":"Virtual"},"value_proposition":{"problem":"Las organizaciones y los profesionales acumulan grandes volúmenes de documentación técnica (tesinas, informes, manuales) que son difíciles de gestionar, consultar y reutilizar, convirtiendo el conocimiento en un activo inaccesible.","solution":"Este curso enseña a utilizar la IA para crear sistemas inteligentes de curaduría documental que clasifican, analizan, y facilitan el acceso al conocimiento técnico, transformando la documentación estática en una base de conocimiento dinámica y consultable.","final_product":{"title":"Sistema Inteligente de Gestión Documental","features":["Clasifica y etiqueta automáticamente documentos técnicos.","Extrae información clave y genera resúmenes ejecutivos.","Permite la consulta de la base de conocimiento a través de un chatbot especializado.","Está listo para organizar y dar acceso a una biblioteca digital técnica."]}},"methodology":{"name":"CONOCIMIENTO LÍQUIDO","phases":[{"name":"Fase 1: Organización y Extracción Inteligente (Semana 1)","objective":"Estructurar la base documental y extraer automáticamente la información más relevante utilizando IA."},{"name":"Fase 2: Validación y Acceso Inteligente (Semana 2)","objective":"Asegurar la calidad de la información y desplegar sistemas de consulta y distribución inteligentes."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Organización Inteligente de Documentación","herramientas":["ChatGPT","TagUI"],"entregable_practico":"Sistema de clasificación y etiquetado automático."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Análisis y Extracción de Información Clave","herramientas":["Claude","ChatGPT"],"entregable_practico":"Resúmenes ejecutivos de 3 documentos técnicos."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Validación y Control de Calidad","herramientas":["ChatGPT","Claude"],"entregable_practico":"Informe de validación de coherencia de un documento."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Creación de Índices y Referencias Cruzadas","herramientas":["ChatGPT"],"entregable_practico":"Índice temático y mapa de conocimiento automatizado."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Actualización y Mantenimiento Continuo","herramientas":["Zapier","Make"],"entregable_practico":"Sistema de alerta para nueva documentación."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Distribución y Acceso Inteligente","herramientas":["Voiceflow","Botpress"],"entregable_practico":"Chatbot especializado para consulta de documentación."}],"detailed_program":[{"week":1,"title":"ORGANIZACIÓN Y EXTRACCIÓN","sessions":[{"session_id":"1","title":"Organización Inteligente de Documentación","objectives":["Utilizar IA para clasificar automáticamente documentos técnicos.","Crear sistemas de etiquetado y categorización inteligente.","Establecer una biblioteca digital organizada."],"deliverables":["Un sistema de carpetas y etiquetas generado por IA.","Script para la clasificación automática de nuevos documentos."]},{"session_id":"2","title":"Análisis y Extracción de Información Clave","objectives":["Identificar automáticamente los conceptos principales en tesinas y papers.","Extraer metodologías y resultados relevantes de forma estructurada.","Crear resúmenes ejecutivos técnicos para una rápida revisión."],"deliverables":["Tabla con los conceptos clave de 5 documentos.","Resúmenes ejecutivos de 3 documentos largos."]},{"session_id":"3","title":"Validación y Control de Calidad","objectives":["Verificar la coherencia técnica de un documento con IA.","Detectar inconsistencias en la terminología y los datos.","Validar la correcta citación de referencias y fuentes."],"deliverables":["Informe de inconsistencias de un documento técnico.","Lista de referencias validadas."]}]},{"week":2,"title":"ACCESO Y MANTENIMIENTO","sessions":[{"session_id":"4","title":"Creación de Índices y Referencias Cruzadas","objectives":["Generar automáticamente índices temáticos y de palabras clave.","Vincular de forma inteligente documentos relacionados entre sí.","Crear mapas de conocimiento técnico para la exploración visual."],"deliverables":["Índice temático de la biblioteca digital.","Grafo de conocimiento de los documentos."]},{"session_id":"5","title":"Actualización y Mantenimiento Continuo","objectives":["Crear sistemas de alerta para nueva documentación relevante.","Actualizar automáticamente las bases de conocimiento.","Integrar la biblioteca con fuentes académicas y técnicas externas."],"deliverables":["Alerta por email de nuevos papers en un área de interés.","Proceso de actualización de la base de conocimiento."]},{"session_id":"6","title":"Distribución y Acceso Inteligente","objectives":["Implementar sistemas de recomendación de documentos.","Desarrollar chatbots especializados para la consulta de la documentación.","Crear portales de conocimiento accesibles para el equipo."],"deliverables":["Un chatbot que responde preguntas sobre la documentación.","Diseño de un portal de conocimiento."]}]}],"evaluation":{"continuous":{"percentage":"50%","criteria":[{"name":"Entregables semanales","value":"40%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"50%","criteria":[{"name":"Calidad del Sistema de Gestión Documental","value":"40%"},{"name":"Presentación final del chatbot","value":"10%"}]}},"resources":{"platforms":["ChatGPT / Claude (con capacidades de análisis de documentos)","Plataformas de creación de chatbots (e.g., Voiceflow, Botpress)"]},"participant_profile":{"requirements":["Experiencia en manejo de documentación técnica.","Conocimientos de Prompt Engineering."],"recommended":["Bibliotecólogos, gestores de conocimiento, ingenieros de I+D."],"not_for":["Personas sin experiencia en gestión documental."]}},
+            "curso_7": {"title":"OPTIMIZACIÓN DE PROCESOS DE FABRICACIÓN CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Intermedio (con conocimientos de procesos de manufactura)","delivery":"Virtual"},"value_proposition":{"problem":"Los procesos de fabricación electrónica enfrentan desafíos constantes en control de calidad, eficiencia de la producción y gestión de la cadena de suministro, lo que impacta directamente en los costos y la competitividad.","solution":"Este curso aplica la IA para abordar los problemas clave de la manufactura electrónica, desde el mantenimiento predictivo y el control de calidad visual hasta la optimización de inventarios y la eficiencia energética.","final_product":{"title":"Dashboard de Control de Producción Inteligente","features":["Predice fallas en equipos de producción y optimiza el mantenimiento.","Simula un sistema de inspección visual para la detección de defectos.","Genera pronósticos de demanda para la gestión de inventarios.","Está listo para ser presentado como una propuesta de mejora de procesos."]}},"methodology":{"name":"FÁBRICA INTELIGENTE","phases":[{"name":"Fase 1: Producción y Calidad Predictiva (Semana 1)","objective":"Utilizar la IA para el análisis predictivo en la producción y la automatización del control de calidad."},{"name":"Fase 2: Optimización y Gestión Inteligente (Semana 2)","objective":"Aplicar la IA para optimizar inventarios, consumo energético y la generación de reportes de producción."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Análisis Predictivo en Producción","herramientas":["DataRobot","H2O.ai","ChatGPT"],"entregable_practico":"Modelo conceptual de mantenimiento predictivo."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Control de Calidad Automatizado","herramientas":["Roboflow","YOLOv8","ChatGPT"],"entregable_practico":"Prototipo de sistema de control de calidad visual."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Optimización de Inventarios","herramientas":["Google Sheets","Airtable","Claude"],"entregable_practico":"Modelo de predicción de demanda."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Eficiencia Energética con IA","herramientas":["Grafana","ChatGPT"],"entregable_practico":"Análisis de sostenibilidad y propuesta de optimización."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Automatización de Reportes de Producción","herramientas":["Looker Studio","ChatGPT"],"entregable_practico":"Dashboard inteligente de KPIs de manufactura."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Integración con Sistemas ERP","herramientas":["Zapier","Make","APIs"],"entregable_practico":"Flujo de trabajo que conecta la producción con un ERP."}],"detailed_program":[{"week":1,"title":"PRODUCCIÓN Y CALIDAD PREDICTIVA","sessions":[{"session_id":"1","title":"Análisis Predictivo en Producción","objectives":["Predecir fallas en equipos de producción con IA.","Analizar patrones de producción para optimizar el rendimiento.","Optimizar los calendarios de mantenimiento preventivo."],"deliverables":["Un modelo conceptual de mantenimiento predictivo.","Análisis de patrones de producción de un dataset."]},{"session_id":"2","title":"Control de Calidad Automatizado","objectives":["Realizar inspección visual automática con IA.","Detectar defectos en componentes electrónicos en tiempo real.","Clasificar automáticamente los productos según su calidad."],"deliverables":["Un prototipo de sistema de control de calidad visual.","Modelo de clasificación de productos."]},{"session_id":"3","title":"Optimización de Inventarios","objectives":["Predecir la demanda de productos con IA.","Gestionar automáticamente el stock de componentes.","Optimizar la cadena de suministro con análisis predictivo."],"deliverables":["Un modelo de predicción de demanda.","Sistema de gestión de stock en Google Sheets."]}]},{"week":2,"title":"EFICIENCIA Y GESTIÓN INTELIGENTE","sessions":[{"session_id":"4","title":"Eficiencia Energética con IA","objectives":["Monitorear de forma inteligente el consumo energético.","Optimizar los procesos para reducir los costos energéticos.","Realizar un análisis de sostenibilidad automatizado."],"deliverables":["Dashboard de consumo energético.","Propuesta de optimización de procesos."]},{"session_id":"5","title":"Automatización de Reportes de Producción","objectives":["Generar automáticamente los KPIs de manufactura.","Crear dashboards inteligentes en tiempo real.","Configurar alertas predictivas de problemas en la producción."],"deliverables":["Dashboard inteligente de KPIs de manufactura.","Sistema de alertas por email."]},{"session_id":"6","title":"Integración con Sistemas ERP","objectives":["Conectar la IA con los sistemas empresariales (ERP).","Automatizar los flujos administrativos relacionados con la producción.","Optimizar la asignación de recursos humanos y materiales."],"deliverables":["Un flujo de trabajo que conecta la producción con un ERP.","Propuesta de optimización de recursos."]}]}],"evaluation":{"continuous":{"percentage":"50%","criteria":[{"name":"Entregables semanales","value":"40%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"50%","criteria":[{"name":"Calidad del Dashboard de Control de Producción","value":"40%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["Plataformas de análisis de datos con IA (e.g., DataRobot, H2O.ai)","ChatGPT / Claude para análisis y reportes."]},"participant_profile":{"requirements":["Conocimiento de los procesos de fabricación electrónica.","Nociones básicas de análisis de datos."],"recommended":["Ingenieros de procesos, producción, y calidad."],"not_for":["Personas sin experiencia en entornos de manufactura."]}},
+            "curso_8": {"title":"SIMULACIONES Y MODELADO ELECTRÓNICO CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Intermedio-Avanzado (con conocimientos de simulación de circuitos)","delivery":"Virtual"},"value_proposition":{"problem":"El diseño y la simulación de circuitos electrónicos es un proceso iterativo y lento que requiere una gran experiencia para optimizar parámetros y predecir el comportamiento de los componentes, retrasando el ciclo de desarrollo.","solution":"Este curso acelera drásticamente el proceso de diseño y validación de circuitos mediante el uso de IA para generar esquemáticos, optimizar simulaciones, predecir el comportamiento de los circuitos y detectar problemas de diseño de forma proactiva.","final_product":{"title":"Asistente de Diseño Electrónico con IA","features":["Genera esquemáticos básicos y sugiere componentes.","Optimiza los parámetros de simulación para acelerar los análisis.","Predice el comportamiento térmico y de frecuencia del diseño.","Genera reportes de simulación y comparativas de diseño automáticamente.","Está listo para ser usado como una herramienta de apoyo en el diseño de circuitos."]}},"methodology":{"name":"DISEÑO ACELERADO POR IA","phases":[{"name":"Fase 1: Diseño y Optimización de Simulaciones (Semana 1)","objective":"Utilizar la IA para generar diseños de circuitos básicos y optimizar los parámetros de simulación."},{"name":"Fase 2: Análisis Predictivo y Generación de Reportes (Semana 2)","objective":"Aplicar la IA para predecir el comportamiento del circuito, detectar fallas y automatizar la documentación."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"IA para Diseño de Circuitos Básicos","herramientas":["ChatGPT","Claude"],"entregable_practico":"Esquemático simple generado con IA."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Optimización de Parámetros de Simulación","herramientas":["ChatGPT","SPICE"],"entregable_practico":"Plan de simulación con parámetros optimizados."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Análisis Predictivo de Comportamiento","herramientas":["ChatGPT","Python"],"entregable_practico":"Informe de análisis predictivo de comportamiento."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Detección de Problemas de Diseño","herramientas":["ChatGPT"],"entregable_practico":"Lista de posibles fallas y sugerencias de mejora."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Generación de Reportes de Simulación","herramientas":["ChatGPT","Claude"],"entregable_practico":"Reporte de simulación generado automáticamente."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Integración con Herramientas CAD","herramientas":["APIs","Webhooks"],"entregable_practico":"Flujo de trabajo CAD-IA automatizado."}],"detailed_program":[{"week":1,"title":"DISEÑO Y OPTIMIZACIÓN","sessions":[{"session_id":"1","title":"IA para Diseño de Circuitos Básicos","objectives":["Generar automáticamente esquemáticos simples.","Recibir sugerencias de componentes basadas en especificaciones.","Realizar una validación inicial de diseños con IA."],"deliverables":["Un diseño de circuito básico generado con asistencia de IA.","Lista de componentes sugeridos."]},{"session_id":"2","title":"Optimización de Parámetros de Simulación","objectives":["Utilizar IA para la selección automática de modelos SPICE.","Optimizar los tiempos de simulación.","Identificar los parámetros críticos para el análisis."],"deliverables":["Un plan de simulación con parámetros optimizados.","Análisis de sensibilidad de parámetros."]},{"session_id":"3","title":"Análisis Predictivo de Comportamiento","objectives":["Predecir la respuesta en frecuencia con IA.","Realizar un análisis térmico automatizado.","Estimar la vida útil de los componentes."],"deliverables":["Un informe de análisis predictivo del comportamiento.","Gráficos de respuesta en frecuencia y análisis térmico."]}]},{"week":2,"title":"DETECCIÓN Y DOCUMENTACIÓN","sessions":[{"session_id":"4","title":"Detección de Problemas de Diseño","objectives":["Identificar automáticamente posibles fallas en el diseño.","Realizar un análisis básico de interferencias electromagnéticas.","Recibir sugerencias de mejoras de diseño."],"deliverables":["Lista de posibles fallas y sugerencias de mejora.","Informe de análisis de interferencias."]},{"session_id":"5","title":"Generación de Reportes de Simulación","objectives":["Automatizar la documentación de los resultados de la simulación.","Generar gráficos y visualizaciones automáticas.","Realizar una comparación inteligente entre versiones de diseño."],"deliverables":["Un reporte de simulación generado automáticamente.","Comparativa de dos versiones de diseño."]},{"session_id":"6","title":"Integración con Herramientas CAD","objectives":["Establecer una conexión básica con software de simulación popular.","Automatizar los flujos de trabajo entre CAD y la IA.","Exportar los resultados de forma inteligente."],"deliverables":["Un flujo de trabajo CAD-IA automatizado.","Resultados de la simulación exportados en formato CSV."]}]}],"evaluation":{"continuous":{"percentage":"50%","criteria":[{"name":"Entregables semanales","value":"40%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"50%","criteria":[{"name":"Calidad del Asistente de Diseño Electrónico","value":"40%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["IA generativa para diseño de hardware (e.g., análogos a ChatGPT para código)","Integraciones de IA con herramientas CAD (e.g., a través de APIs)"]},"participant_profile":{"requirements":["Experiencia en el uso de software de simulación de circuitos (e.g., SPICE, Multisim).","Conocimientos de diseño electrónico."],"recommended":["Ingenieros de diseño de hardware, PCB y de aplicaciones."],"not_for":["Personas sin experiencia en diseño y simulación de circuitos."]}},
+            "curso_9": {"title":"COMUNICACIÓN TÉCNICA MULTIIDIOMA CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Básico-Intermedio (con necesidad de comunicación internacional)","delivery":"Virtual"},"value_proposition":{"problem":"La colaboración en proyectos de ingeniería a nivel global se ve obstaculizada por las barreras del idioma y las diferencias culturales, lo que genera malentendidos, retrasa proyectos y limita la expansión a nuevos mercados.","solution":"Este curso dota a los ingenieros de las capacidades para globalizar su comunicación técnica, utilizando la IA para realizar traducciones especializadas, localizar documentación y adaptar las comunicaciones a diferentes contextos culturales, de forma rápida y precisa.","final_product":{"title":"Kit de Globalización de Comunicación Técnica","features":["Contiene un glosario terminológico multilingüe para su especialidad.","Incluye plantillas para la generación de manuales y presentaciones multiidioma.","Ofrece un sistema para la comunicación efectiva con proveedores y equipos internacionales.","Está listo para ser utilizado en proyectos de colaboración internacional."]}},"methodology":{"name":"INGENIERÍA SIN FRONTERAS","phases":[{"name":"Fase 1: Localización de Contenido Técnico (Semana 1)","objective":"Utilizar la IA para traducir y adaptar documentación técnica, manteniendo la precisión y la coherencia terminológica."},{"name":"Fase 2: Comunicación y Colaboración Global (Semana 2)","objective":"Aplicar la IA para facilitar la comunicación con equipos y proveedores internacionales y gestionar la colaboración multicultural."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Traducción Técnica Especializada","herramientas":["DeepL","Google Translate API","ChatGPT"],"entregable_practico":"Glosario terminológico multilingüe."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Creación de Manuales Multilingües","herramientas":["ChatGPT","Claude"],"entregable_practico":"Manual técnico de 1 página en dos idiomas."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Presentaciones Técnicas Globales","herramientas":["Beautiful.ai","Tome","ChatGPT"],"entregable_practico":"Presentación adaptada a una audiencia internacional."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Comunicación con Proveedores Internacionales","herramientas":["ChatGPT"],"entregable_practico":"Plantillas de email para RFQs en múltiples idiomas."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Documentación de Patentes Global","herramientas":["ChatGPT","Google Patents"],"entregable_practico":"Borrador de un claim técnico en dos idiomas."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Colaboración Internacional","herramientas":["Slack","Microsoft Teams","ChatGPT"],"entregable_practico":"Protocolo de comunicación para equipos multiculturales."}],"detailed_program":[{"week":1,"title":"LOCALIZACIÓN DE CONTENIDO TÉCNICO","sessions":[{"session_id":"1","title":"Traducción Técnica Especializada","objectives":["Utilizar IA para la traducción de documentación técnica.","Mantener la consistencia de la terminología específica.","Adaptar culturalmente el contenido técnico."],"deliverables":["Un documento técnico traducido a un segundo idioma.","Glosario terminológico multilingüe."]},{"session_id":"2","title":"Creación de Manuales Multilingües","objectives":["Generar automáticamente manuales en varios idiomas.","Asegurar la consistencia técnica entre las diferentes versiones.","Localizar las normativas y estándares mencionados."],"deliverables":["Una plantilla para la generación de manuales multilingües.","Manual técnico de 1 página en dos idiomas."]},{"session_id":"3","title":"Presentaciones Técnicas Globales","objectives":["Adaptar automáticamente las diapositivas para diferentes audiencias.","Generar scripts multiidioma para las presentaciones.","Tener en cuenta las consideraciones culturales en las presentaciones."],"deliverables":["Una presentación técnica adaptada para una audiencia internacional.","Script de la presentación en dos idiomas."]}]},{"week":2,"title":"COMUNICACIÓN Y COLABORACIÓN GLOBAL","sessions":[{"session_id":"4","title":"Comunicación con Proveedores Internacionales","objectives":["Crear plantillas automáticas para RFQs en múltiples idiomas.","Asistir en la negociación técnica con IA.","Clarificar automáticamente las especificaciones técnicas."],"deliverables":["Plantillas de email para RFQs en múltiples idiomas.","Simulación de una negociación técnica con IA."]},{"session_id":"5","title":"Documentación de Patentes Global","objectives":["Preparar documentos de patentes multiidioma.","Realizar búsquedas de prior art a nivel internacional.","Traducir de forma especializada los claims técnicos."],"deliverables":["Borrador de un claim técnico en dos idiomas.","Reporte de búsqueda de prior art."]},{"session_id":"6","title":"Colaboración Internacional","objectives":["Utilizar herramientas para equipos técnicos multiculturales.","Sincronizar la documentación a nivel global.","Establecer protocolos de comunicación técnica internacional."],"deliverables":["Protocolo de comunicación para equipos multiculturales.","Plan de sincronización de documentación."]}]}],"evaluation":{"continuous":{"percentage":"50%","criteria":[{"name":"Entregables semanales","value":"40%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"50%","criteria":[{"name":"Calidad del Kit de Globalización de Comunicación","value":"40%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["Herramientas de traducción con IA (e.g., DeepL, Google Translate for technical docs)","ChatGPT / Claude para adaptación y localización."]},"participant_profile":{"requirements":["Necesidad de comunicarse con equipos o clientes internacionales.","Conocimientos de Prompt Engineering."],"recommended":["Ingenieros que trabajan en empresas multinacionales o con clientes globales."],"not_for":["Personas cuya actividad profesional es exclusivamente local."]}},
+            "curso_10": {"title":"CUMPLIMIENTO NORMATIVO Y ESTÁNDARES CON IA","info":{"duration":"2 semanas","days_per_week":"3 (Lunes, Miércoles, Viernes)","hours_per_session":"1.5 horas","modality":"Taller práctico con enfoque hands-on","level":"Intermedio-Avanzado (con experiencia en normativas y estándares)","delivery":"Virtual"},"value_proposition":{"problem":"El cumplimiento de normativas y estándares en ingeniería es un proceso complejo, manual y propenso a errores que consume una gran cantidad de recursos y expone a las organizaciones a riesgos significativos de incumplimiento.","solution":"Este curso enseña a los ingenieros a automatizar el proceso de cumplimiento normativo utilizando la IA para mapear normativas, verificar el cumplimiento de las especificaciones, generar la documentación regulatoria y gestionar las certificaciones de forma proactiva.","final_product":{"title":"Sistema de Gestión de Compliance Automatizado","features":["Mapea las normativas aplicables a un producto específico.","Genera checklists de compliance y verifica el cumplimiento de forma automática.","Prepara borradores de la documentación técnica para certificaciones.","Monitorea las actualizaciones normativas y gestiona las renovaciones.","Está listo para ser implementado como un sistema de apoyo al área de calidad o regulatoria."]}},"methodology":{"name":"COMPLIANCE INTELIGENTE","phases":[{"name":"Fase 1: Mapeo y Análisis Automatizado (Semana 1)","objective":"Utilizar la IA para identificar las normativas aplicables y analizar el cumplimiento de los productos de forma automática."},{"name":"Fase 2: Documentación y Gestión Proactiva (Semana 2)","objective":"Automatizar la preparación de la documentación regulatoria y gestionar el ciclo de vida de las certificaciones con IA."}]},"malla_curricular":[{"sesion":"1","dia":"Lunes (Semana 1)","tema_principal":"Mapeo Automático de Normativas","herramientas":["ChatGPT","Claude"],"entregable_practico":"Mapa de normativas aplicables a un producto."},{"sesion":"2","dia":"Miércoles (Semana 1)","tema_principal":"Análisis de Compliance Automatizado","herramientas":["ChatGPT","Claude"],"entregable_practico":"Checklist de compliance generado automáticamente."},{"sesion":"3","dia":"Viernes (Semana 1)","tema_principal":"Preparación de Documentación Regulatoria","herramientas":["ChatGPT","Claude"],"entregable_practico":"Borrador de reporte técnico para certificación."},{"sesion":"4","dia":"Lunes (Semana 2)","tema_principal":"Gestión de Certificaciones","herramientas":["Airtable","Zapier","ChatGPT"],"entregable_practico":"Plan de gestión de certificaciones con alertas."},{"sesion":"5","dia":"Miércoles (Semana 2)","tema_principal":"Análisis de Riesgos Normativos","herramientas":["ChatGPT","Claude"],"entregable_practico":"Evaluación de riesgos de compliance."},{"sesion":"6","dia":"Viernes (Semana 2)","tema_principal":"Comunicación con Entes Regulatorios","herramientas":["ChatGPT"],"entregable_practico":"Borrador de comunicación oficial a un ente regulatorio."}],"detailed_program":[{"week":1,"title":"MAPEO Y ANÁLISIS AUTOMATIZADO","sessions":[{"session_id":"1","title":"Mapeo Automático de Normativas","objectives":["Identificar las normativas aplicables a un producto por mercado.","Realizar un seguimiento automático de las actualizaciones normativas.","Comparar los requisitos entre diferentes estándares internacionales."],"deliverables":["Un mapa de normativas aplicables a un producto.","Sistema de alerta de actualizaciones normativas."]},{"session_id":"2","title":"Análisis de Compliance Automatizado","objectives":["Verificar automáticamente el cumplimiento de las especificaciones.","Identificar los gaps normativos en un producto.","Generar checklists de compliance personalizados."],"deliverables":["Un checklist de compliance generado automáticamente.","Informe de gaps normativos."]},{"session_id":"3","title":"Preparación de Documentación Regulatoria","objectives":["Automatizar la redacción de reportes técnicos para certificación.","Generar planes de prueba según las normativas aplicables.","Compilar automáticamente las evidencias de compliance."],"deliverables":["Un borrador de reporte técnico para certificación.","Plan de pruebas generado por IA."]}]},{"week":2,"title":"GESTIÓN PROACTIVA Y COMUNICACIÓN","sessions":[{"session_id":"4","title":"Gestión de Certificaciones","objectives":["Realizar un seguimiento automático de la vigencia de los certificados.","Configurar alertas de renovación y actualizaciones.","Comparar los requisitos entre diferentes entidades certificadoras."],"deliverables":["Un plan de gestión de certificaciones con alertas.","Tabla comparativa de requisitos de certificadoras."]},{"session_id":"5","title":"Análisis de Riesgos Normativos","objectives":["Evaluar automáticamente los riesgos de compliance.","Predecir los cambios normativos relevantes para la industria.","Analizar el impacto de las nuevas regulaciones en los productos existentes."],"deliverables":["Una evaluación de riesgos de compliance.","Reporte de impacto de nuevas regulaciones."]},{"session_id":"6","title":"Comunicación con Entes Regulatorios","objectives":["Preparar automáticamente borradores de comunicaciones oficiales.","Asistir en la respuesta a las observaciones regulatorias.","Mantener un registro de la correspondencia normativa."],"deliverables":["Un borrador de comunicación oficial a un ente regulatorio.","Borrador de respuesta a una observación regulatoria."]}]}],"evaluation":{"continuous":{"percentage":"50%","criteria":[{"name":"Entregables semanales","value":"40%"},{"name":"Participación en talleres","value":"10%"}]},"final":{"percentage":"50%","criteria":[{"name":"Calidad del Sistema de Gestión de Compliance","value":"40%"},{"name":"Presentación final del proyecto","value":"10%"}]}},"resources":{"platforms":["Plataformas de IA para análisis de documentos legales y técnicos.","ChatGPT / Claude para análisis y generación de reportes."]},"participant_profile":{"requirements":["Experiencia en áreas de calidad, regulatoria o cumplimiento normativo.","Conocimiento de los estándares relevantes para su industria."],"recommended":["Ingenieros de calidad, asuntos regulatorios y gerentes de producto."],"not_for":["Personas sin experiencia o interés en el cumplimiento normativo."]}}
+        };
+
+        const courseList = document.getElementById('course-list');
+        const courseContent = document.getElementById('course-content');
+        const searchInput = document.getElementById('course-search');
+        const aboutUsLink = document.getElementById('about-us-link');
+
+        function displayCourses(filter = '') {
+            courseList.innerHTML = '';
+            Object.keys(allCoursesData).forEach(courseId => {
+                const course = allCoursesData[courseId];
+                if (course.title.toLowerCase().includes(filter.toLowerCase())) {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.dataset.courseId = courseId;
+                    link.textContent = course.title;
+                    listItem.appendChild(link);
+                    courseList.appendChild(listItem);
+                }
+            });
+        }
+
+        function displayCourseContent(courseId) {
+            const course = allCoursesData[courseId];
+            if (!course) return;
+
+            let contentHtml = `
+                <div class="card">
+                    <h1>${course.title}</h1>
+                    <div class="course-info-banner">
+                        ${Object.entries(course.info).map(([key, value]) => `<p><strong>${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> ${value}</p>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            if (course.value_proposition) {
+                contentHtml += `
+                    <div class="card">
+                        <h2>Concepto y Propuesta de Valor</h2>
+                        <p><strong>Problema:</strong> ${course.value_proposition.problem}</p>
+                        <p><strong>Solución:</strong> ${course.value_proposition.solution}</p>
+                        <h4>Producto Final: ${course.value_proposition.final_product.title}</h4>
+                        <ul>
+                            ${course.value_proposition.final_product.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            if (course.methodology || course.evaluation) {
+                contentHtml += `<div class="card"><h2>Metodología y Evaluación</h2>`;
+                if (course.methodology) {
+                    contentHtml += `
+                        <h3>Metodología: ${course.methodology.name}</h3>
+                        ${course.methodology.phases.map(p => `<div><h4>${p.name}</h4><p>${p.objective}</p></div>`).join('')}
+                    `;
+                }
+                if (course.evaluation) {
+                    contentHtml += `
+                        <h3>Evaluación</h3>
+                        <p><strong>Continua (${course.evaluation.continuous.percentage}):</strong></p>
+                        <ul>${course.evaluation.continuous.criteria.map(c => `<li>${c.name}: ${c.value}</li>`).join('')}</ul>
+                        <p><strong>Final (${course.evaluation.final.percentage}):</strong></p>
+                        <ul>${course.evaluation.final.criteria.map(c => `<li>${c.name}: ${c.value}</li>`).join('')}</ul>
+                    `;
+                }
+                contentHtml += `</div>`;
+            }
+
+            if (course.malla_curricular) {
+                contentHtml += `
+                    <div class="card">
+                        <h2>Malla Curricular</h2>
+                        <table class="malla-curricular-table">
+                            <thead>
+                                <tr>
+                                    <th>Sesión</th>
+                                    <th>Día</th>
+                                    <th>Tema Principal</th>
+                                    <th>Herramientas</th>
+                                    <th>Entregable Práctico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${course.malla_curricular.map(sesion => `
+                                    <tr>
+                                        <td>${sesion.sesion}</td>
+                                        <td>${sesion.dia}</td>
+                                        <td>${sesion.tema_principal}</td>
+                                        <td>${Array.isArray(sesion.herramientas) ? sesion.herramientas.join(', ') : ''}</td>
+                                        <td>${sesion.entregable_practico}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            if (course.detailed_program) {
+                contentHtml += `<div class="card"><h2>Programa Detallado</h2><div class="accordion">`;
+                course.detailed_program.forEach(week => {
+                    contentHtml += `<div class="accordion-item">
+                                        <button class="accordion-header">Semana ${week.week}: ${week.title}</button>
+                                        <div class="accordion-content">
+                                            ${week.sessions.map(session => `
+                                                <div class="session-detail">
+                                                    <h5>Sesión ${session.session_id}: ${session.title}</h5>
+                                                    <p><strong>Objetivos:</strong></p>
+                                                    <ul>${session.objectives.map(o => `<li>${o}</li>`).join('')}</ul>
+                                                    <p><strong>Entregables:</strong></p>
+                                                    <ul>${session.deliverables.map(d => `<li>${d}</li>`).join('')}</ul>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                   </div>`;
+                });
+                contentHtml += `</div></div>`;
+            }
+
+            if (course.participant_profile || course.resources) {
+                contentHtml += `<div class="card"><h2>Perfil del Participante y Recursos</h2>`;
+                if (course.participant_profile) {
+                     contentHtml += `
+                        <h3>Perfil del Participante</h3>
+                        <p><strong>Requisitos:</strong></p>
+                        <ul>${course.participant_profile.requirements.map(r => `<li>${r}</li>`).join('')}</ul>
+                        <p><strong>Recomendado para:</strong></p>
+                        <ul>${course.participant_profile.recommended.map(r => `<li>${r}</li>`).join('')}</ul>
+                        <p><strong>No recomendado para:</strong></p>
+                        <ul>${course.participant_profile.not_for.map(r => `<li>${r}</li>`).join('')}</ul>
+                    `;
+                }
+                if (course.resources) {
+                    contentHtml += `
+                        <h3>Recursos</h3>
+                        <p><strong>Plataformas:</strong></p>
+                        <ul>${course.resources.platforms.map(p => `<li>${p}</li>`).join('')}</ul>
+                    `;
+                }
+                contentHtml += `</div>`;
+            }
+
+            courseContent.innerHTML = contentHtml;
+            addAccordionListeners();
+        }
+
+        function displayAboutUs() {
+            const aboutUsHTML = `
+                <div class="card">
+                    <h1>Sobre Nosotros - Cursos Especializados de IA</h1>
+                    <p><strong>HALLEY</strong> es una empresa líder en capacitación tecnológica especializada, dedicada a la formación de profesionales en el uso estratégico de Inteligencia Artificial aplicada a la ingeniería. Diseñamos programas educativos innovadores que combinan conocimiento técnico avanzado con aplicaciones prácticas inmediatas.</p>
+                    <p>Nuestro enfoque se centra en transformar la manera en que los ingenieros electrónicos integran la IA en sus procesos diarios, desde la investigación académica hasta la optimización de procesos industriales, siempre con un enfoque práctico y orientado a resultados medibles.</p>
+                </div>
+                <div class="card">
+                    <h2>Nuestra Especialización</h2>
+                    <h4>🎓 Formación Técnica Especializada</h4>
+                    <p>Desarrollamos cursos específicamente diseñados para ingenieros electrónicos, con contenido técnico riguroso y aplicaciones prácticas inmediatas. Cada programa está estructurado en sesiones intensivas que combinan teoría especializada con ejercicios hands-on.</p>
+                    <h4>🚀 Metodología Innovadora</h4>
+                    <p>Implementamos una metodología única de <strong>15 minutos de teoría + 15 minutos de práctica + 3 minutos de Q&A</strong> por sesión, garantizando máxima retención y aplicabilidad inmediata del conocimiento adquirido.</p>
+                    <h4>🔬 Casos de Estudio Reales</h4>
+                    <p>Nuestros cursos incluyen ejercicios específicos en <strong>biomedicina</strong>, <strong>telecomunicaciones</strong> y <strong>nanochips</strong>, sectores de alta demanda en el mercado actual de ingeniería electrónica.</p>
+                </div>
+                <div class="card">
+                    <h2>Galería</h2>
+                    <div class="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active"><img src="https://i.postimg.cc/50QYCCrX/Frame-100.jpg" alt="Galería 1"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/tRPnRFPf/Frame-101.jpg" alt="Galería 2"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/28Db1375/Frame-102.jpg" alt="Galería 3"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/X7kZd3sk/Frame-103.jpg" alt="Galería 4"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/prN9YdNq/Frame-104.jpg" alt="Galería 5"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/QMyKCbfL/Frame-105.jpg" alt="Galería 6"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/nhnDPMXW/Frame-106.jpg" alt="Galería 7"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/P5KwshZ5/Frame-107.jpg" alt="Galería 8"></div>
+                            <div class="carousel-item"><img src="https://i.postimg.cc/zvnyd185/Frame-108.jpg" alt="Galería 9"></div>
+                        </div>
+                        <button class="carousel-nav prev">&#10094;</button>
+                        <button class="carousel-nav next">&#10095;</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Nuestro Equipo Docente</h2>
+                    <div class="team-container">
+                        <div class="team-member">
+                            <img src="https://i.postimg.cc/75M18TyP/image.png" alt="Foto de Joselin Mallma Mendoza">
+                            <h4>JOSELIN MALLMA MENDOZA</h4>
+                            <p><strong>CEO & CO-FOUNDER</strong><br><em>Periodista de Investigación</em></p>
+                        </div>
+                        <div class="team-member">
+                            <img src="https://i.postimg.cc/Ffry9s9y/image.png" alt="Foto de Nelson Diaz Pereira">
+                            <h4>NELSON DIAZ PEREIRA</h4>
+                            <p><strong>COO & CO-FOUNDER</strong><br><em>Productor Audiovisual</em></p>
+                        </div>
+                        <div class="team-member">
+                            <img src="https://i.postimg.cc/3dGC1cSv/image.png" alt="Foto de David Vargas Da Silva Ulloa">
+                            <h4>DAVID VARGAS DA SILVA ULLOA</h4>
+                            <p><strong>DIRECTOR GENERAL DE PROYECTOS</strong><br><em>Divulgador Científico</em></p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h2>Contacto</h2>
+                     <p><strong>📞 ¿Listo para Revolucionar tu Práctica Profesional?</strong></p>
+                     <p>(+51) 949 - 071 - 912</p>
+                     <p>(+51) 987 - 264 - 068</p>
+                     <p>halleylaboratory@gmail.com</p>
+                </div>
+            `;
+            courseContent.innerHTML = aboutUsHTML;
+            setupCarousel();
+        }
+
+        function setupCarousel() {
+            const carouselInner = document.querySelector('.carousel-inner');
+            const items = document.querySelectorAll('.carousel-item');
+            const totalItems = items.length;
+            let currentIndex = 0;
+
+            document.querySelector('.next').addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalItems;
+                carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+            });
+
+            document.querySelector('.prev').addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+            });
+        }
+
+        function addAccordionListeners() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    header.classList.toggle('active');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            displayCourses(e.target.value);
+        });
+
+        courseList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                e.preventDefault();
+                const courseId = e.target.dataset.courseId;
+                displayCourseContent(courseId);
+
+                document.querySelectorAll('#course-list a, #about-us-link').forEach(a => a.classList.remove('active'));
+                e.target.classList.add('active');
+            }
+        });
+
+        aboutUsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            displayAboutUs();
+            document.querySelectorAll('#course-list a, #about-us-link').forEach(a => a.classList.remove('active'));
+            e.target.classList.add('active');
+        });
+
+        // Initial load
+        displayCourses();
+        aboutUsLink.click();
+
+    </script>
+</body>
+</html>
